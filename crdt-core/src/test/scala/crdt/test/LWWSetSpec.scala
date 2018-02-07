@@ -114,7 +114,6 @@ class LWWSetSpec extends FlatSpec with Matchers {
       .lookupElements
 
     result.size should equal(3)
-    System.out.println(result)
     result should contain theSameElementsAs (Seq(Element("a", 3), Element("b", 2), Element("c", 4)))
   }
 }

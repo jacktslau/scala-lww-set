@@ -44,7 +44,6 @@ all methods ensures its immutability that can use in distributed environment.
 ## TODO
 A todo list to enhance this project
 * implements LWWSet to template trait SetLike that can provides common Set functionality
-*
 
 ## Reference
 * [Conflict-free replicated data type](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type)
