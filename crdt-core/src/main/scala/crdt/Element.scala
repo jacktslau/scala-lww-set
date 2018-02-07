@@ -1,5 +1,3 @@
 package crdt
 
-class Element {
-
-}
+case class Element[E](value: E, ts: Long = System.currentTimeMillis())
