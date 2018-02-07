@@ -19,6 +19,14 @@ class LWWSetSpec extends FlatSpec with Matchers {
     result shouldBe empty
   }
 
+  it should "check contains correctly with only the added element values" in {
+    val lwwSet = LWWSet[String]()
+      .add(Element("a", 1), Element("b", 1))
+      .remove(Element("d", 5))
+    lwwSet.contains("a") should be(true)
+    lwwSet.contains("d") should be(false)
+  }
+
   it should "computes lookup correctly by adding and then removing elements" in {
     val lwwSet = LWWSet[String]()
     val result = lwwSet
