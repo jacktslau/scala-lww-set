@@ -27,7 +27,7 @@ class RedisPoolProvider @Inject()(config: Configuration, lifecycle: ApplicationL
       new RedisClientPool(host, port, maxIdle, database, secret, timeout, maxConnections, poolWaitTimeout = poolWaitTimeout)
     }
 
-    logger.info("Creating Redis Pool")
+    logger.info(s"Creating Redis Pool: $redisPool")
 
     lifecycle.addStopHook(() => Future.successful {
       logger.info("Stopping Redis Pool")

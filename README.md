@@ -69,41 +69,62 @@ curl -X GET http://localhost:9000/key
 1. Install JDK 8
 2. Install [SBT](https://www.scala-sbt.org/index.html)
 3. Install [Docker](https://docs.docker.com/install/)
-5. Install [Gatling](https://gatling.io/)
-4. Run the following command to compile code
+4. Install [Gatling](https://gatling.io/)
+5. Install [AWS EB Client](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html)
+6. Run the following command to compile code
 
-```
+```bash
 > sbt compile
 ```
 
 ## Run Test
-```
+```bash
 > sbt test
 ```
 
-## Developing
-To develop this project, you need to setup docker to startup a redis server
+## Running and Developing
+To run this project locally, you have to setup a Redis server.
 
-```
+Starting Redis inside docker image:
+```bash
 > docker-compose up -d
+```
+
+Starting Local Server in SBT. Server can be accessible on `http://localhost:9000`
+```bash
+> sbt run
 ```
 
 
 ## Packaging
-There is a dockerize.sh to automatically to build a docker image that can run in anywhere
+To dockerize the application into a Docker image and push the image into AWS ECR
 ```
 > sh dockerize.sh
 ```
 
 
-## Running
+## Running Server as Docker Image
 After packaging, you can run the docker image by the following command:
 ```
-> docker run -d -p 80:9000 scala-lww-set-server
+> docker run -d -p 80:80 -e REDIS_HOST='localhost' -e REDIS_PORT='6379' lww-set-server
 ```
 
-## Deploy
-This project allows you to deploy to AWS
+## AWS Setup
+To deploy this project to AWS. you need to setup AWS account by this steps
+
+1. Signup AWS Account
+2. Create an IAM User with following permissions and save the access key and secret into `~/.aws/credentials`
+  * AWSElasticBeanstalkFullAccess
+  * AmazonECS_FullAccess
+2. Create ElasticCache with Redis Instance
+3. Create Elastic Container Service (ECS)
+  * checked only `Store container images securely with Amazon ECR`
+  * follow the `Push Commands` instructions on the screen in order to push docker images into AWS ECR
+4. Update AWS ECR variables in `dockerize.sh` and then run the script
+5. Run `eb init` to initialize ElasticBeanstalk Environment
+6. Create ElasticBeanstalk Environment with Docker platform, ensure the aws-eb-role contains read access to ECR
+7. Run `deploy.sh` to deploy the latest docker image into ElasticBeanstalk
+
 ```
 
 ```

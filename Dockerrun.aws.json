@@ -1,0 +1,23 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "856424103372.dkr.ecr.ap-southeast-1.amazonaws.com/lww-set-server:latest",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "ContainerPort": "80"
+    }
+  ],
+  "environment": [
+    {
+      "name": "REDIS_HOST",
+      "value": "lww-set.vi0thz.0001.apse1.cache.amazonaws.com"
+    },
+    {
+      "name": "REDIS_PORT",
+      "value": "6379"
+    }
+  ],
+  "Logging": "/var/log/"
+}
