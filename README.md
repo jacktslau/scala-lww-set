@@ -39,13 +39,31 @@ Keys and value
 ### Add Element
 `POST /:key`
 
+```bash
+curl -X POST \
+  http://localhost:9000/key \
+  -H 'Content-Type: application/json' \
+  -d '{ "value": "test", "ts": 123457789 }'
+```
+
 ### Remove Element
 `DELETE /:key`
+
+```bash
+curl -X DELETE \
+  http://localhost:9000/key \
+  -H 'Content-Type: application/json' \
+  -d '{ "value": "test", "ts": 123457789 }'
+```
 
 ### Lookup
 `GET /:key`
 
-###
+```bash
+curl -X GET http://localhost:9000/key
+```
+
+
 
 ## Building
 1. Install JDK 8
@@ -71,34 +89,42 @@ To develop this project, you need to setup docker to startup a redis server
 
 
 ## Packaging
+There is a dockerize.sh to automatically to build a docker image that can run in anywhere
 ```
->
+> sh dockerize.sh
 ```
 
 
 ## Running
+After packaging, you can run the docker image by the following command:
 ```
->
+> docker run -d -p 80:9000 scala-lww-set-server
 ```
 
 ## Deploy
 This project allows you to deploy to AWS
 ```
+
 ```
 
 ## TODO
 A todo list to enhance this project
 * implements LWWSet to template trait SetLike that can provides common Set functionality
 * add pagination to Lookup API
-* better errors handling
-* CI/CD Script
 * Use proper mocking library to write the spec (like Mockito, ScalaMock)
+* CI/CD Script
 * Integration Test
 * Resolve library conflict in PlayFramework
-* Dockerize the application
+* Use Terrform to create AWS infrastructure automatically
 
 ## Reference
 * [Conflict-free replicated data type](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type)
 * [CRDT notes by pfrazee](https://github.com/pfrazee/crdt_notes)
 
-## How to ensure server to support 1 miullion concurrent request
+## How to ensure server to support 1 million concurrent request
+1. Load testing the application server to find out how many concurrent users can handle in one single server
+2. Load testing Redis how large in one sorted set can support
+3. Implement Redis Data Sharding if necessary
+4. Setup testing environment with Auto Scaling Group, Metrics and Monitoring enabled
+5. Load Testing to simulate large amount users
+6. Constantly analyze test results and do optimization on servers/code until reaching 1 million users
