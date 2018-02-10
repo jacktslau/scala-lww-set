@@ -22,7 +22,7 @@ class RedisPoolProvider @Inject()(config: Configuration, lifecycle: ApplicationL
       val database = config.getOptional[Int]("redis.database").getOrElse(0)
       val timeout = config.getOptional[Int]("redis.timeout").getOrElse(3000)
       val maxConnections = config.getOptional[Int]("redis.maxConnections").getOrElse(100)
-      val poolWaitTimeout = config.getOptional[Long]("redis.poolWaitTimeout").getOrElse(3000)
+      val poolWaitTimeout = config.getOptional[Long]("redis.poolWaitTimeout").getOrElse(3000L)
 
       new RedisClientPool(host, port, maxIdle, database, secret, timeout, maxConnections, poolWaitTimeout = poolWaitTimeout)
     }
