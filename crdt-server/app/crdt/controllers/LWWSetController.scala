@@ -24,7 +24,7 @@ class LWWSetController @Inject()(service: LWWSetService, cc: ControllerComponent
   def save(key: String, isAdd: Boolean) = api { implicit req =>
     val resultOpt = for {
       json <- req.body.asJson
-      elem <- json.asOpt[Element[String]]
+      elem <- json.asOpt[List[Element[String]]]
     } yield {
       if(isAdd) service.add(key, elem)
       else service.remove(key, elem)
@@ -32,14 +32,9 @@ class LWWSetController @Inject()(service: LWWSetService, cc: ControllerComponent
 
     resultOpt match {
       case Some(resultFuture) =>
-        resultFuture.map { success =>
-          if(success) {
-            val resp = SaveResponse(1)
-            Ok(Json.toJson(resp))
-          } else {
-            val resp = ErrorResponse("ds.error", "Fail to write into redis")
-            InternalServerError(Json.toJson(resp))
-          }
+        resultFuture.map { num =>
+          val resp = SaveResponse(num)
+          Ok(Json.toJson(resp))
         }
 
       case None =>

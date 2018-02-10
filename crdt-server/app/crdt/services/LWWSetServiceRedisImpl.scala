@@ -19,19 +19,33 @@ class LWWSetServiceRedisImpl @Inject() (redis: RedisClientPool) extends LWWSetSe
   // Redis Sorted Set to Element Transformation
   protected def zset2Element: (String, Double) => Element[String] = { (value, score) => Element(value, score.toLong) }
 
-  override def add(key: String, elem: Element[String]): Future[Boolean] = save(s"$key-addset", elem.ts, elem.value)
+  override def add(key: String, elems: List[Element[String]]): Future[Long] = save(s"$key-addset", elems)
 
-  override def remove(key: String, elem: Element[String]): Future[Boolean] = save(s"$key-removeset", elem.ts, elem.value)
+  override def remove(key: String, elems: List[Element[String]]): Future[Long] = save(s"$key-removeset", elems)
 
-  protected def save(member: String, source: Double, value: String): Future[Boolean] = {
-    logger.debug(s"Saving $value to $member with source $source")
-    for {
-      success <- redis.withClient { cli =>
-        Future {
-          cli.zadd(member, source, value)
+  protected def save(member: String, elems: List[Element[String]]): Future[Long] = {
+    if(elems.size <= 0) Future.successful(0L)
+    else {
+      logger.debug(s"Saving $elems to $member")
+      for {
+        result <- redis.withClient { cli =>
+          Future {
+            val scoreVals = elems.map(e => (e.ts.toDouble, e.value))
+            if (scoreVals.size > 1) {
+              val score = scoreVals.head._1
+              val value = scoreVals.head._2
+              cli.zadd(member, score, value, scoreVals.drop(1):_*)
+
+            } else {
+              val score = scoreVals.head._1
+              val value = scoreVals.head._2
+              cli.zadd(member, score, value)
+            }
+
+          }
         }
-      }
-    } yield success.isDefined
+      } yield result.getOrElse(0L) // TODO insert error handling
+    }
   }
 
   override def get(key: String): Future[Option[LWWSet[String]]] = {

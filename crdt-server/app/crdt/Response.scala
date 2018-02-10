@@ -2,7 +2,7 @@ package crdt
 
 import play.api.libs.json.{Format, Json}
 
-case class SaveResponse(inserted: Int)
+case class SaveResponse(inserted: Long)
 case class ErrorResponse(code: String, message: String)
 
 object SaveResponse {

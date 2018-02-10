@@ -43,7 +43,7 @@ Keys and value
 curl -X POST \
   http://localhost:9000/key \
   -H 'Content-Type: application/json' \
-  -d '{ "value": "test", "ts": 123457789 }'
+  -d '[{ "value": "test", "ts": 123457789 }]'
 ```
 
 ### Remove Element
@@ -53,7 +53,7 @@ curl -X POST \
 curl -X DELETE \
   http://localhost:9000/key \
   -H 'Content-Type: application/json' \
-  -d '{ "value": "test", "ts": 123457789 }'
+  -d '[{ "value": "test", "ts": 123457789 }]'
 ```
 
 ### Lookup
@@ -69,6 +69,7 @@ curl -X GET http://localhost:9000/key
 1. Install JDK 8
 2. Install [SBT](https://www.scala-sbt.org/index.html)
 3. Install [Docker](https://docs.docker.com/install/)
+5. Install [Gatling](https://gatling.io/)
 4. Run the following command to compile code
 
 ```

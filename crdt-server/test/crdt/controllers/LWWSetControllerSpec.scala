@@ -23,10 +23,10 @@ class LWWSetControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecti
       val service = inject[LWWSetService]
 
       val controller = new LWWSetController(service, stubControllerComponents())
-      val body: JsValue = Json.obj(
+      val body: JsValue = Json.arr(Json.obj(
         "ts" -> 100,
         "value" -> "test"
-      )
+      ))
       val request = FakeRequest(POST, s"/$key").withJsonBody(body)
       val result = controller.save(key, true).apply(request)
 
@@ -44,9 +44,9 @@ class LWWSetControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecti
       val service = inject[LWWSetService]
 
       val controller = new LWWSetController(service, stubControllerComponents())
-      val body: JsValue = Json.obj(
+      val body: JsValue = Json.arr(Json.obj(
         "something" -> "wrong-type"
-      )
+      ))
       val request = FakeRequest(POST, s"/$key").withJsonBody(body)
       val result = controller.save(key, true).apply(request)
 
@@ -55,32 +55,15 @@ class LWWSetControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecti
       contentAsString(result) must include ("param.error")
     }
 
-    "return 500 Error if record is saved unsuccessfully" in {
-      val key = "fail"
-      val service = inject[LWWSetService]
-
-      val controller = new LWWSetController(service, stubControllerComponents())
-      val body: JsValue = Json.obj(
-        "ts" -> 100,
-        "value" -> "test"
-      )
-      val request = FakeRequest(POST, s"/$key").withJsonBody(body)
-      val result = controller.save(key, true).apply(request)
-
-      status(result) mustBe INTERNAL_SERVER_ERROR
-      contentType(result) mustBe Some("application/json")
-      contentAsString(result) must include ("ds.error")
-    }
-
     "return 500 Error if service has thrown exception" in {
       val key = "exception"
       val service = inject[LWWSetService]
 
       val controller = new LWWSetController(service, stubControllerComponents())
-      val body: JsValue = Json.obj(
+      val body: JsValue = Json.arr(Json.obj(
         "ts" -> 100,
         "value" -> "test"
-      )
+      ))
       val request = FakeRequest(POST, s"/$key").withJsonBody(body)
       val result = controller.save(key, true).apply(request)
 
@@ -97,10 +80,10 @@ class LWWSetControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecti
       val service = inject[LWWSetService]
 
       val controller = new LWWSetController(service, stubControllerComponents())
-      val body: JsValue = Json.obj(
+      val body: JsValue = Json.arr(Json.obj(
         "ts" -> 100,
         "value" -> "test"
-      )
+      ))
       val request = FakeRequest(DELETE, s"/$key").withJsonBody(body)
       val result = controller.save(key, false).apply(request)
 
@@ -118,9 +101,9 @@ class LWWSetControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecti
       val service = inject[LWWSetService]
 
       val controller = new LWWSetController(service, stubControllerComponents())
-      val body: JsValue = Json.obj(
+      val body: JsValue = Json.arr(Json.obj(
         "something" -> "wrong-type"
-      )
+      ))
       val request = FakeRequest(DELETE, s"/$key").withJsonBody(body)
       val result = controller.save(key, false).apply(request)
 
@@ -129,32 +112,15 @@ class LWWSetControllerSpec extends PlaySpec with GuiceOneAppPerTest with Injecti
       contentAsString(result) must include ("param.error")
     }
 
-    "return 500 Error if record is removed unsuccessfully" in {
-      val key = "fail"
-      val service = inject[LWWSetService]
-
-      val controller = new LWWSetController(service, stubControllerComponents())
-      val body: JsValue = Json.obj(
-        "ts" -> 100,
-        "value" -> "test"
-      )
-      val request = FakeRequest(DELETE, s"/$key").withJsonBody(body)
-      val result = controller.save(key, false).apply(request)
-
-      status(result) mustBe INTERNAL_SERVER_ERROR
-      contentType(result) mustBe Some("application/json")
-      contentAsString(result) must include ("ds.error")
-    }
-
     "return 500 Error if service has thrown exception" in {
       val key = "exception"
       val service = inject[LWWSetService]
 
       val controller = new LWWSetController(service, stubControllerComponents())
-      val body: JsValue = Json.obj(
+      val body: JsValue = Json.arr(Json.obj(
         "ts" -> 100,
         "value" -> "test"
-      )
+      ))
       val request = FakeRequest(DELETE, s"/$key").withJsonBody(body)
       val result = controller.save(key, false).apply(request)
 

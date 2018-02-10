@@ -6,21 +6,21 @@ import scala.concurrent.Future
 
 trait LWWSetService {
 
-  /** Add a new element into a LWW-Set `key`
+  /** Add new elements into a LWW-Set `key`
     *
-    * @param key  LWW-Set key
-    * @param elem element to be saved
-    * @return     a Boolean indicate the action is success or not
+    * @param key   LWW-Set key
+    * @param elems element to be saved
+    * @return      number of records inserted or updated
     */
-  def add(key: String, elem: Element[String]): Future[Boolean]
+  def add(key: String, elems: List[Element[String]]): Future[Long]
 
-  /** Remove an element in the LWW-Set `key`
+  /** Remove elements in the LWW-Set `key`
     *
-    * @param key  LWW-Set key
-    * @param elem element to be removed
-    * @return     a Boolean indicate the action is success or not
+    * @param key   LWW-Set key
+    * @param elems element to be removed
+    * @return      number of records removed
     */
-  def remove(key: String, elem: Element[String]): Future[Boolean]
+  def remove(key: String, elems: List[Element[String]]): Future[Long]
 
   /** Return the LWW-Set by the given `key`
     *

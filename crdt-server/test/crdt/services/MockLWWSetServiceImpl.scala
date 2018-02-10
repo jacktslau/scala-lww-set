@@ -4,13 +4,13 @@ import crdt.{Element, LWWSet}
 import scala.concurrent.Future
 
 class MockLWWSetServiceImpl extends LWWSetService {
-  protected def save(key: String, elem: Element[String]): Future[Boolean] = Future.successful {
+  protected def save(key: String, elems: List[Element[String]]): Future[Long] = Future.successful {
     if(key == "exception") throw new RuntimeException("test")
-    key != "fail"
+    elems.size
   }
 
-  override def add(key: String, elem: Element[String]): Future[Boolean] = save(key, elem)
-  override def remove(key: String, elem: Element[String]): Future[Boolean] = save(key, elem)
+  override def add(key: String, elems: List[Element[String]]): Future[Long] = save(key, elems)
+  override def remove(key: String, elems: List[Element[String]]): Future[Long] = save(key, elems)
 
   override def get(key: String): Future[Option[LWWSet[String]]] = Future.successful {
     key match {
