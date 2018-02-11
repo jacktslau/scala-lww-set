@@ -12,7 +12,3 @@ object SaveResponse {
 object ErrorResponse {
   implicit lazy val format: Format[ErrorResponse] = Json.format[ErrorResponse]
 }
-
-object Errors {
-  def BAD_REQUEST = ErrorResponse("", "")
-}
