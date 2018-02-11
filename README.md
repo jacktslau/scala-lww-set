@@ -32,11 +32,10 @@ By using redis sorted set datatype,
 
 ### API Server
 The server is implemented by Play Framework. API is operated by HTTP verb.
-Keys and value
 
 ## API
 
-### Add Element
+### Add Elements
 `POST /:key`
 
 ```bash
@@ -46,7 +45,7 @@ curl -X POST \
   -d '[{ "value": "test", "ts": 123457789 }]'
 ```
 
-### Remove Element
+### Remove Elements
 `DELETE /:key`
 
 ```bash
@@ -63,28 +62,28 @@ curl -X DELETE \
 curl -X GET http://localhost:9000/key
 ```
 
+## Prerequisite
+Please install the following tools in order to build/develop/deploy this project
 
+* JDK 8
+* [SBT](https://www.scala-sbt.org/index.html)
+* [Docker](https://docs.docker.com/install/)
+* [AWS EB Client](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html)
 
 ## Building
-1. Install JDK 8
-2. Install [SBT](https://www.scala-sbt.org/index.html)
-3. Install [Docker](https://docs.docker.com/install/)
-4. Install [AWS EB Client](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html)
-5. Run the following command to compile code
-
+To compile this project
 ```bash
 > sbt compile
 ```
 
 ## Run Test
+Run core & server unit test
 ```bash
 > sbt test
 ```
 
 ## Running and Developing
-To run this project locally, you have to setup a Redis server.
-
-Starting Redis inside docker image:
+To run this project locally, you have to setup a Redis server. Use the following command to start Redis server locally.
 ```bash
 > docker-compose up -d
 ```
@@ -96,20 +95,20 @@ Starting Local Server in SBT. Server can be accessible on `http://localhost:9000
 
 
 ## Packaging
-To dockerize the application into a Docker image and push the image into AWS ECR
+Dockerize the application into a Docker image and push the image into AWS ECR
 ```
-> sh dockerize.sh
+> sh bin/dockerize.sh
 ```
 
 
 ## Running Server as Docker Image
-After packaging, you can run the docker image by the following command:
+After dockerized, you can run the docker image locally by the following command:
 ```
-> docker run -d -p 80:80 -e REDIS_HOST='localhost' -e REDIS_PORT='6379' lww-set-server
+> docker run -d -p 80:80 -e REDIS_HOST='localhost' -e REDIS_PORT='6379' lww-set-server:latest
 ```
 
 ## AWS Setup
-To deploy this project to AWS. you need to setup AWS account by this steps
+To deploy this project to AWS. You need to setup AWS account by following steps
 
 1. Signup AWS Account
 2. Create an IAM User with following permissions and save the access key and secret into `~/.aws/credentials`
@@ -119,14 +118,16 @@ To deploy this project to AWS. you need to setup AWS account by this steps
 3. Create Elastic Container Service (ECS)
   * checked only `Store container images securely with Amazon ECR`
   * follow the `Push Commands` instructions on the screen in order to push docker images into AWS ECR
-4. Update AWS ECR variables in `dockerize.sh` and then run the script
-5. Run `eb init` to initialize ElasticBeanstalk Environment
-6. Create ElasticBeanstalk Environment with Docker platform, ensure the aws-eb-role contains read access to ECR
-7. Run `deploy.sh` to deploy the latest docker image into ElasticBeanstalk
-
-```
-
-```
+4. Update AWS ECR variables in `bin/.docker.config`
+5. Run `eb init --profile [aws]` to initialize ElasticBeanstalk Environment
+6. Create ElasticBeanstalk Environment with Docker platform, ensure the aws-elasticbeanstalk-role contains read access of ECR
+7. Copy Redis host and port settings from ElasticCache to ElasticBeanstalk `Environment Properties` with property name: `REDIS_HOST` and `REDIS_PORT`
+8. Add following lines in `.elasticbeanstalk/config.yml` to let `eb deploy` script deploy docker config instead of whole profile files
+> ```
+> deploy:
+>  artifact: bin/Dockerrun.aws.json
+> ```
+9. Run `bin/deploy.sh` to deploy the latest docker image into ElasticBeanstalk.
 
 
 ## Chaos Monkeys
