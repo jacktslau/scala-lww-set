@@ -18,7 +18,7 @@ class RedisPoolProvider @Inject()(config: Configuration, lifecycle: ApplicationL
       val host = config.getOptional[String]("redis.host").getOrElse("localhost")
       val port = config.getOptional[Int]("redis.port").getOrElse(6379)
       val secret = config.getOptional[String]("redis.secret")
-      val maxIdle = config.getOptional[Int]("redis.maxIdle").getOrElse(8)
+      val maxIdle = config.getOptional[Int]("redis.maxIdle").getOrElse(10)
       val database = config.getOptional[Int]("redis.database").getOrElse(0)
       val timeout = config.getOptional[Int]("redis.timeout").getOrElse(3000)
       val maxConnections = config.getOptional[Int]("redis.maxConnections").getOrElse(100)

@@ -34,3 +34,15 @@ lazy val server = (project in file("crdt-server"))
         playScalaTest % Test
       )
     ).dependsOn(core)
+
+lazy val gatling = (project in file("gatling"))
+  .enablePlugins(GatlingPlugin)
+  .settings(
+    commonSettings,
+    name := "gatling",
+    libraryDependencies ++= Seq(
+      scalaTest % Test,
+      gatlingFramework % "test,it",
+      gatlingCharts % "test,it"
+    )
+  ).dependsOn(core, server)

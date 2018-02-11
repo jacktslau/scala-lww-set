@@ -11,8 +11,8 @@ package crdt
   * Since it is based on LWW, this data type is convergent.
   *
   */
-case class LWWSet[E](protected val addSet: Set[Element[E]] = Set.empty[Element[E]],
-                     protected val removeSet: Set[Element[E]] = Set.empty[Element[E]]) {
+case class LWWSet[E](val addSet: Set[Element[E]] = Set.empty[Element[E]],
+                     val removeSet: Set[Element[E]] = Set.empty[Element[E]]) {
 
   /**
     * Tests if this LWW-Set is empty.

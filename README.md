@@ -69,9 +69,8 @@ curl -X GET http://localhost:9000/key
 1. Install JDK 8
 2. Install [SBT](https://www.scala-sbt.org/index.html)
 3. Install [Docker](https://docs.docker.com/install/)
-4. Install [Gatling](https://gatling.io/)
-5. Install [AWS EB Client](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html)
-6. Run the following command to compile code
+4. Install [AWS EB Client](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install.html)
+5. Run the following command to compile code
 
 ```bash
 > sbt compile
@@ -129,11 +128,35 @@ To deploy this project to AWS. you need to setup AWS account by this steps
 
 ```
 
+
+## Chaos Monkeys
+3 Chaos Monkeys implemented in the gatling folder
+
+### Normal Scenario
+This Monkey adds and removes items from server at random intervals.
+```
+> sbt "project gatling" "gatling:testOnly crdt.test.NormalChaosMonkeys"
+```
+
+### Offline Online Sync
+This Monkey mimics a user who adds and removes set offline, and then goes online to sync with server.
+```
+> sbt "project gatling" "gatling:testOnly crdt.test.OfflineOnelineSync"
+```
+
+### Client Viewer
+This Monkey views a set by merging server's set into its own local copy
+```
+> sbt "project gatling" "gatling:testOnly crdt.test.ClientViewer"
+```
+
 ## TODO
 A todo list to enhance this project
 * implements LWWSet to template trait SetLike that can provides common Set functionality
 * add pagination to Lookup API
 * Use proper mocking library to write the spec (like Mockito, ScalaMock)
+* Add Sync API (sync both add set and remove set locally, lookup API not enough to do it)
+* Redis Connection Problems found during Load Test, need further lookup
 * CI/CD Script
 * Integration Test
 * Resolve library conflict in PlayFramework
