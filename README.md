@@ -146,7 +146,9 @@ This Monkey mimics a user who adds and removes set offline, and then goes online
 ```
 
 ### Client Viewer
-This Monkey views a set by merging server's set into its own local copy
+This Monkey views a set by merging server's set into its own local copy. It contains two scenarios, one is periodly call the lookup API to get the latest LWW-Set and try to merge with local copy, another one is keep adding and removing elements in the set just like Normal Scenario.
+
+This monkey is not fully functional because the server is missing the sync api, lookup api is not enough to do it. It is because lookup api return elements exist at the current state, sync required both add set and remove set in order to compute to the current state.
 ```
 > sbt "project gatling" "gatling:testOnly crdt.test.ClientViewer"
 ```
@@ -162,6 +164,11 @@ A todo list to enhance this project
 * Integration Test
 * Resolve library conflict in PlayFramework
 * Use Terrform to create AWS infrastructure automatically
+
+### Sync API
+* return both addSet and removeSet instead of computes lookup of the LWW-Set
+* Besides using periodly request to the sync API, it should supports long polling or web-socket in this API.
+* In terms of scaling, I suggest using push notification to push the update event to mobile clients, so you can offload the servers to the Push Notification provider like Google or Apple
 
 ## Reference
 * [Conflict-free replicated data type](https://en.wikipedia.org/wiki/Conflict-free_replicated_data_type)
